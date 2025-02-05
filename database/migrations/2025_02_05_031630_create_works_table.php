@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('name');
             $table->integer('score');
-            $table->foreignId('category_id');
-            $table->string('user_id');
+            $table->foreignId('category_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
