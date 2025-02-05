@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categories;
 use App\Models\Work;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WorkController extends Controller
 {
@@ -12,7 +14,9 @@ class WorkController extends Controller
      */
     public function index()
     {
-        //
+        $works = Work::where('user_id', Auth::user()->id)->get();
+
+        return view('works.index',compact('works'));
     }
 
     /**
@@ -20,7 +24,9 @@ class WorkController extends Controller
      */
     public function create()
     {
-        //
+        $category = Categories::all();
+
+        return view('works.create', compact('category'));
     }
 
     /**
@@ -28,7 +34,19 @@ class WorkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request -> validate([
+            'title'=>['required', 'string', 'max:255'],
+            'category_id'=>['required'],
+            'path_img'=>['required'],
+        ]);
+
+        Work::create([
+            'title' => $request->title,
+            'category_id' => $request->category_id,
+            'path_img' => $request->path_img
+        ]);
+
+        return redirect() -> route('works.index');
     }
 
     /**
